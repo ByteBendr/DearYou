@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <title>DearYou - Anonymous Messages</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #0f172a;
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #1e293b;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 95vh;
+            border: 1px solid #334155;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .header .username {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .controls {
+            padding: 15px;
+            background: #1e293b;
+            border-bottom: 1px solid #334155;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 15px;
+            border: 1px solid #475569;
+            background: #334155;
+            color: #e2e8f0;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .filter-btn.active {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        .name-filter {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #475569;
+            background: #334155;
+            color: #e2e8f0;
+            border-radius: 20px;
+            font-size: 14px;
+            transition: border 0.3s;
+        }
+
+        .name-filter:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        .name-filter::placeholder {
+            color: #94a3b8;
+        }
+
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #0f172a;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message-bubble {
+            background: #1e293b;
+            padding: 12px 16px;
+            border-radius: 18px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            max-width: 85%;
+            border: 1px solid #334155;
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        .message-from {
+            font-weight: 600;
+            color: #3b82f6;
+        }
+
+        .message-to {
+            font-weight: 600;
+            color: #10b981;
+        }
+
+        .message-text {
+            font-size: 15px;
+            color: #e2e8f0;
+            word-wrap: break-word;
+        }
+
+        .message-time {
+            font-size: 11px;
+            color: #64748b;
+            margin-top: 5px;
+        }
+
+        .input-area {
+            padding: 15px;
+            background: #1e293b;
+            border-top: 1px solid #334155;
+        }
+
+        .to-input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #475569;
+            background: #334155;
+            color: #e2e8f0;
+            border-radius: 20px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .to-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        .to-input::placeholder {
+            color: #94a3b8;
+        }
+
+        .char-count {
+            font-size: 11px;
+            color: #64748b;
+            text-align: right;
+            margin-bottom: 5px;
+        }
+
+        .char-count.warning {
+            color: #f59e0b;
+        }
+
+        .char-count.limit {
+            color: #ef4444;
+        }
+
+        .message-input-container {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #475569;
+            background: #334155;
+            color: #e2e8f0;
+            border-radius: 25px;
+            font-size: 14px;
+            resize: none;
+            font-family: inherit;
+        }
+
+        .message-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        .message-input::placeholder {
+            color: #94a3b8;
+        }
+
+        .send-btn {
+            width: 45px;
+            height: 45px;
+            border: none;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            transition: transform 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        .send-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .send-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 10px;
+            color: #3b82f6;
+        }
+
+        .modal-content p {
+            margin-bottom: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .modal-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .modal-btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #64748b;
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+            fill: #475569;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                height: 100vh;
+                border-radius: 0;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .filter-buttons {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Username Modal -->
+    <div class="modal active" id="usernameModal">
+        <div class="modal-content">
+            <h2>Welcome to DearYou! 👋</h2>
+            <p>Please enter your name to continue<br><small>For the best experience, we recommend using your real name</small></p>
+            <input type="text" class="modal-input" id="usernameInput" placeholder="Enter your name" maxlength="20">
+            <button class="modal-btn" onclick="setUsername()">Continue</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>💕DearYou💕</h1>
+            <div class="username" id="currentUser"></div>
+        </div>
+
+        <div class="controls">
+            <div class="filter-buttons">
+                <button class="filter-btn active" onclick="setFilter('newest')">Newest First</button>
+                <button class="filter-btn" onclick="setFilter('oldest')">Oldest First</button>
+            </div>
+            <input type="text" class="name-filter" id="nameFilter" placeholder="Filter by name...">
+        </div>
+
+        <div class="messages" id="messagesContainer">
+            <div class="empty-state">
+                <svg fill="#475569" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>
+                <p>No messages yet. Be the first to send one!</p>
+            </div>
+        </div>
+
+        <div class="input-area">
+            <input type="text" class="to-input" id="toInput" placeholder="To: (e.g., John)" maxlength="30">
+            <div class="char-count" id="charCount">0 / 500</div>
+            <div class="message-input-container">
+                <textarea class="message-input" id="messageInput" placeholder="Type your message..." rows="1" maxlength="500"></textarea>
+                <button class="send-btn" onclick="sendMessage()">➤</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        const _0x321733=_0x387b;(function(_0x437b8b,_0x13e2fc){const _0xed7c0c=_0x387b,_0x4a25fe=_0x437b8b();while(!![]){try{const _0x18ff47=parseInt(_0xed7c0c(0x82))/0x1*(parseInt(_0xed7c0c(0x9c))/0x2)+parseInt(_0xed7c0c(0xbb))/0x3*(-parseInt(_0xed7c0c(0x96))/0x4)+-parseInt(_0xed7c0c(0x8d))/0x5+-parseInt(_0xed7c0c(0xb4))/0x6+parseInt(_0xed7c0c(0x72))/0x7*(-parseInt(_0xed7c0c(0x85))/0x8)+-parseInt(_0xed7c0c(0x70))/0x9+parseInt(_0xed7c0c(0x9b))/0xa;if(_0x18ff47===_0x13e2fc)break;else _0x4a25fe['push'](_0x4a25fe['shift']());}catch(_0x507d9c){_0x4a25fe['push'](_0x4a25fe['shift']());}}}(_0x28dc,0xe7267));import{initializeApp}from'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';import{getDatabase,ref,push,onValue,query,orderByChild}from'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';const firebaseConfig={'apiKey':'AIzaSyAS_hTAHk01qAVF0mSODHXB3fzUdoZ1ugI','authDomain':_0x321733(0x8e),'databaseURL':_0x321733(0xb6),'projectId':_0x321733(0xa7),'storageBucket':'dearyou-99de6.firebasestorage.app','messagingSenderId':'783973697706','appId':_0x321733(0x9d)},app=initializeApp(firebaseConfig),database=getDatabase(app);let currentUsername=localStorage[_0x321733(0xab)](_0x321733(0x6f))||'',currentUserId=localStorage[_0x321733(0xab)]('userId')||'',messages=[],currentFilter=_0x321733(0x77);currentUsername&&currentUserId&&(document[_0x321733(0xb7)](_0x321733(0x9e))[_0x321733(0x91)][_0x321733(0xb8)](_0x321733(0x9f)),document[_0x321733(0xb7)](_0x321733(0xa0))[_0x321733(0x88)]=_0x321733(0x7e)+currentUserId,loadMessages());function _0x387b(_0x3d86cc,_0x14b79e){const _0x28dcab=_0x28dc();return _0x387b=function(_0x387ba9,_0x1ab75d){_0x387ba9=_0x387ba9-0x67;let _0x5d9005=_0x28dcab[_0x387ba9];return _0x5d9005;},_0x387b(_0x3d86cc,_0x14b79e);}window[_0x321733(0x89)]=function(){const _0x57f04f=_0x321733,_0x3523c2=document['getElementById'](_0x57f04f(0x90))[_0x57f04f(0xb2)][_0x57f04f(0x94)]();if(_0x3523c2[_0x57f04f(0x99)]<0x2){alert('Please\x20enter\x20a\x20name\x20with\x20at\x20least\x202\x20characters');return;}currentUsername=_0x3523c2;const _0x3a7583=Math['floor'](0x2710+Math[_0x57f04f(0x8b)]()*0x15f90);currentUserId=_0x3523c2+'#'+_0x3a7583,localStorage[_0x57f04f(0x95)](_0x57f04f(0x6f),currentUsername),localStorage[_0x57f04f(0x95)]('userId',currentUserId),document['getElementById'](_0x57f04f(0xa0))[_0x57f04f(0x88)]=currentUserId,document['getElementById'](_0x57f04f(0x9e))[_0x57f04f(0x91)][_0x57f04f(0xb8)](_0x57f04f(0x9f)),loadMessages();};function loadMessages(){const _0x253be0=_0x321733,_0x27c1a0=ref(database,_0x253be0(0xa4)),_0x952286=query(_0x27c1a0,orderByChild(_0x253be0(0xa5)));onValue(_0x952286,_0x27ba3f=>{const _0x25c7bb=_0x253be0;messages=[],_0x27ba3f[_0x25c7bb(0x7d)](_0x63a589=>{const _0xe424a7=_0x25c7bb;messages[_0xe424a7(0xb0)]({'id':_0x63a589[_0xe424a7(0xb5)],..._0x63a589[_0xe424a7(0x93)]()});}),displayMessages();});}window[_0x321733(0xba)]=function(){const _0xbbaf3e=_0x321733,_0x4618c7=document['getElementById'](_0xbbaf3e(0xa9))[_0xbbaf3e(0xb2)][_0xbbaf3e(0x94)](),_0x291e9d=document[_0xbbaf3e(0xb7)](_0xbbaf3e(0xac))[_0xbbaf3e(0xb2)][_0xbbaf3e(0x94)]();if(!_0x4618c7||!_0x291e9d){alert(_0xbbaf3e(0x79));return;}if(_0x4618c7[_0xbbaf3e(0x99)]<0x2||_0x4618c7['length']>0x1e){alert('Recipient\x20name\x20must\x20be\x20between\x202\x20and\x2030\x20characters');return;}if(_0x291e9d['length']<0x1||_0x291e9d[_0xbbaf3e(0x99)]>0x1f4){alert(_0xbbaf3e(0x6e));return;}const _0x4d9f77=ref(database,_0xbbaf3e(0xa4));push(_0x4d9f77,{'from':currentUserId,'to':_0x4618c7,'message':_0x291e9d,'timestamp':Date[_0xbbaf3e(0x6a)]()})['then'](()=>{const _0x47e04a=_0xbbaf3e;document[_0x47e04a(0xb7)](_0x47e04a(0xa9))[_0x47e04a(0xb2)]='',document[_0x47e04a(0xb7)](_0x47e04a(0xac))[_0x47e04a(0xb2)]='',document[_0x47e04a(0xb7)](_0x47e04a(0xac))[_0x47e04a(0xa6)]['height']=_0x47e04a(0x6d);})[_0xbbaf3e(0x68)](_0x74c7f6=>{const _0xcee691=_0xbbaf3e;alert('Failed\x20to\x20send\x20message:\x20'+_0x74c7f6[_0xcee691(0x7f)]);});};function displayMessages(){const _0x5f3c86=_0x321733,_0x610c8a=document[_0x5f3c86(0xb7)](_0x5f3c86(0x81)),_0x539c04=document[_0x5f3c86(0xb7)](_0x5f3c86(0xa8))[_0x5f3c86(0xb2)][_0x5f3c86(0x74)]();let _0x360d95=messages[_0x5f3c86(0xb3)](_0x5d2c1c=>{const _0x32a976=_0x5f3c86;if(!_0x539c04)return!![];return _0x5d2c1c[_0x32a976(0xa2)][_0x32a976(0x74)]()['includes'](_0x539c04)||_0x5d2c1c['to'][_0x32a976(0x74)]()[_0x32a976(0x8c)](_0x539c04);});currentFilter===_0x5f3c86(0x77)?_0x360d95['sort']((_0x42a34c,_0x4109b9)=>_0x4109b9[_0x5f3c86(0xa5)]-_0x42a34c[_0x5f3c86(0xa5)]):_0x360d95[_0x5f3c86(0x8f)]((_0x1f1a58,_0x42d524)=>_0x1f1a58[_0x5f3c86(0xa5)]-_0x42d524[_0x5f3c86(0xa5)]);if(_0x360d95['length']===0x0){_0x610c8a['innerHTML']=_0x5f3c86(0x9a);return;}_0x610c8a[_0x5f3c86(0x83)]=_0x360d95[_0x5f3c86(0x87)](_0x53f3d0=>{const _0x2dad6d=_0x5f3c86,_0x44e9b9=new Date(_0x53f3d0['timestamp']),_0x558bcc=_0x44e9b9[_0x2dad6d(0x73)](_0x2dad6d(0x7c),{'hour':_0x2dad6d(0xb9),'minute':'2-digit'}),_0x194020=_0x44e9b9[_0x2dad6d(0xa3)]('en-US',{'month':_0x2dad6d(0x8a),'day':_0x2dad6d(0xa1)});return _0x2dad6d(0x6b)+_0x53f3d0[_0x2dad6d(0xa2)]+_0x2dad6d(0x92)+_0x53f3d0['to']+'</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22message-text\x22>'+escapeHtml(_0x53f3d0[_0x2dad6d(0x7f)])+'</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22message-time\x22>'+_0x194020+_0x2dad6d(0x7b)+_0x558bcc+'</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20';})[_0x5f3c86(0x71)]('');}function _0x28dc(){const _0x44ad7d=['</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22message-to\x22>To:\x20','val','trim','setItem','4dZfVaz','shiftKey','height','length','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22empty-state\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<svg\x20fill=\x22#475569\x22\x20viewBox=\x220\x200\x2024\x2024\x22><path\x20d=\x22M20\x202H4c-1.1\x200-2\x20.9-2\x202v18l4-4h14c1.1\x200\x202-.9\x202-2V4c0-1.1-.9-2-2-2zm0\x2014H6l-2\x202V4h16v12z\x22/></svg>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p>No\x20messages\x20found</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','62289420RSlVtT','857416OLTLqK','1:783973697706:web:50a2380766568a39ece8d3','usernameModal','active','currentUser','numeric','from','toLocaleDateString','messages','timestamp','style','dearyou-99de6','nameFilter','toInput','createElement','getItem','messageInput','char-count\x20warning','keypress','div','push','querySelectorAll','value','filter','4732458fmFFoG','key','https://dearyou-99de6-default-rtdb.europe-west1.firebasedatabase.app','getElementById','remove','2-digit','sendMessage','2614665GhRNLt','className','addEventListener','catch','target','now','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22message\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22message-bubble\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22message-header\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22message-from\x22>From:\x20','.filter-btn','auto','Message\x20must\x20be\x20between\x201\x20and\x20500\x20characters','username','13410423dHifmq','join','2611UtKpHg','toLocaleTimeString','toLowerCase','\x20/\x20500','char-count\x20limit','newest','charCount','Please\x20fill\x20in\x20both\x20recipient\x20and\x20message','Enter','\x20at\x20','en-US','forEach','Your\x20Username:\x20','message','scrollHeight','messagesContainer','2PTMKpc','innerHTML','add','36336AZDUyB','input','map','textContent','setUsername','short','random','includes','6475280zVwzii','dearyou-99de6.firebaseapp.com','sort','usernameInput','classList'];_0x28dc=function(){return _0x44ad7d;};return _0x28dc();}window['setFilter']=function(_0x5490b3){const _0x18ea95=_0x321733;currentFilter=_0x5490b3,document[_0x18ea95(0xb1)](_0x18ea95(0x6c))[_0x18ea95(0x7d)](_0x39ae42=>_0x39ae42[_0x18ea95(0x91)][_0x18ea95(0xb8)](_0x18ea95(0x9f))),event[_0x18ea95(0x69)][_0x18ea95(0x91)][_0x18ea95(0x84)](_0x18ea95(0x9f)),displayMessages();},document[_0x321733(0xb7)](_0x321733(0xa8))[_0x321733(0x67)](_0x321733(0x86),displayMessages);const textarea=document['getElementById'](_0x321733(0xac));textarea['addEventListener']('input',function(){const _0x5aec47=_0x321733;this['style'][_0x5aec47(0x98)]=_0x5aec47(0x6d),this[_0x5aec47(0xa6)]['height']=Math['min'](this[_0x5aec47(0x80)],0x64)+'px';const _0x503492=document['getElementById'](_0x5aec47(0x78)),_0x157100=this['value'][_0x5aec47(0x99)];_0x503492[_0x5aec47(0x88)]=_0x157100+_0x5aec47(0x75);if(_0x157100>=0x1f4)_0x503492[_0x5aec47(0xbc)]=_0x5aec47(0x76);else _0x157100>=0x1c2?_0x503492[_0x5aec47(0xbc)]=_0x5aec47(0xad):_0x503492['className']='char-count';}),textarea['addEventListener'](_0x321733(0xae),function(_0x173f57){const _0x7a6eef=_0x321733;_0x173f57[_0x7a6eef(0xb5)]===_0x7a6eef(0x7a)&&!_0x173f57[_0x7a6eef(0x97)]&&(_0x173f57['preventDefault'](),sendMessage());});function escapeHtml(_0xb15e46){const _0x3759ec=_0x321733,_0x3f0042=document[_0x3759ec(0xaa)](_0x3759ec(0xaf));return _0x3f0042['textContent']=_0xb15e46,_0x3f0042[_0x3759ec(0x83)];}
+    </script>
+</body>
+</html>
