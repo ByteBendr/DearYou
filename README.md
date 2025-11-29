@@ -54,10 +54,11 @@ Search through all messages instantly.
 
 ### 🏷️ Message Categories
 
-Add optional tags like: - Confession\
-- Compliment\
-- Question\
-- Story\
+Add optional tags like: 
+- Confession
+- Compliment
+- Question
+- Story
 - Random
 
 ### 💾 Save & Export Conversations
@@ -87,8 +88,3 @@ day.
 messages, reply, react, pin, search, tag, and save conversations. No
 accounts required. Mobile-friendly chat design, unique usernames, and
 meaningful interactions.**
-
-**Tags:**\
-message board, anonymous messaging, emotional messages, confessions,
-compliments, chat-style messages, reactions, pinned messages, message
-search, message tags, save messages, mobile-friendly chat
