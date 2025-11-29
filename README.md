@@ -4,8 +4,8 @@ Send a message from your heart, to the person who needs to read it.
 
 DearYou is a simple, warm, and anonymous-friendly message board where
 you can write to anyone --- a friend, a crush, someone you miss, or even
-a complete stranger.\
-No accounts, no logins, no complications.\
+a complete stranger.
+No accounts, no logins, no complications.
 Just **from {your name} to {their name}**, in a clean, chat-style
 layout.
 
@@ -14,7 +14,7 @@ layout.
 ## 🌟 What is DearYou?
 
 DearYou lets you leave messages for others in a comforting,
-messaging-app-like space.\
+messaging-app-like space.
 When you first open it, you choose a username like:
 
 `Michael#48219`
@@ -29,23 +29,24 @@ This keeps things: - **Personal** (your real name) - **Unique** (your
 ### 💬 Send Messages
 
 Write something for someone. Sweet, emotional, honest, funny ---
-anything.\
+anything.
 Messages appear in beautiful chat bubbles.
 
 ### 🔄 Reply to Messages
 
-Every message can be replied to.\
+Every message can be replied to.
 This creates clean **conversation threads**.
 
 ### ❤️ React to Messages
 
-React with: - ❤️\
-- 👍\
+React with: 
+- ❤️
+- 👍
 - 😊
 
 ### 📌 Pin Important Messages
 
-Pin messages to the top.\
+Pin messages to the top.
 Stored only on your device.
 
 ### 🔍 Search Messages
